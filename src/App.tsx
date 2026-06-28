@@ -4,6 +4,7 @@ import { sendAudio } from "./api/teacherApi";
 import { setToken } from "./auth/token";
 import LanguageSelector from "./components/LanguageSelector/LanguageSelector";
 import Microphone from "./components/Microphone/Microphone";
+import Avatar from "./components/Avatar";
 
 type Language = "en" | "hi";
 
@@ -25,6 +26,9 @@ function App() {
 
   const [status, setStatus] = useState("🟢 Ready");
 
+  // ======================================================
+  // AUTH
+  // ======================================================
   const handleAuth = async () => {
     if (!email || !password || (isSignup && !fullName)) {
       alert("Please enter all required fields");
@@ -50,6 +54,9 @@ function App() {
     }
   };
 
+  // ======================================================
+  // AUDIO HANDLER
+  // ======================================================
   const handleRecordingComplete = async (
     _: string,
     blob: Blob
@@ -84,27 +91,26 @@ function App() {
     }
   };
 
+  // ======================================================
+  // LOGIN SCREEN
+  // ======================================================
   if (!isLoggedIn) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontFamily: "Arial",
-          backgroundColor: "#f5f7fb",
-        }}
-      >
-        <div
-          style={{
-            width: "350px",
-            padding: "30px",
-            background: "white",
-            borderRadius: "12px",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-          }}
-        >
+      <div style={{
+        minHeight: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontFamily: "Arial",
+        backgroundColor: "#f5f7fb",
+      }}>
+        <div style={{
+          width: "350px",
+          padding: "30px",
+          background: "white",
+          borderRadius: "12px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+        }}>
           <h2 style={{ textAlign: "center" }}>
             {isSignup ? "Sign Up" : "Login"}
           </h2>
@@ -157,26 +163,25 @@ function App() {
     );
   }
 
+  // ======================================================
+  // MAIN APP
+  // ======================================================
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f5f7fb",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          width: "700px",
-          background: "white",
-          borderRadius: "16px",
-          padding: "40px",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-        }}
-      >
+    <div style={{
+      minHeight: "100vh",
+      backgroundColor: "#f5f7fb",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      fontFamily: "Arial, sans-serif",
+    }}>
+      <div style={{
+        width: "700px",
+        background: "white",
+        borderRadius: "16px",
+        padding: "40px",
+        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+      }}>
         <h1 style={{ textAlign: "center", color: "#2563eb" }}>
           Learn with MAR
         </h1>
@@ -184,6 +189,13 @@ function App() {
         <p style={{ textAlign: "center", color: "#666" }}>
           Personalized AI Learning
         </p>
+
+        {/* ======================================================
+            🤖 AVATAR ADDED HERE (IMPORTANT FIX)
+        ====================================================== */}
+        <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
+          <Avatar />
+        </div>
 
         {!selectedLanguage ? (
           <LanguageSelector
@@ -198,9 +210,7 @@ function App() {
                 : "आइए हिन्दी सीखें!"}
             </h2>
 
-            <Microphone
-              onRecordingComplete={handleRecordingComplete}
-            />
+            <Microphone onRecordingComplete={handleRecordingComplete} />
           </>
         )}
 
