@@ -7,7 +7,6 @@ import Microphone from "./components/Microphone/Microphone";
 import Avatar from "./components/Avatar";
 
 type Language = "en" | "hi";
-
 type AvatarState = "idle" | "listening" | "talking";
 
 function App() {
@@ -23,13 +22,12 @@ function App() {
     useState<Language | null>(null);
 
   const [recognizedText, setRecognizedText] = useState("");
-
   const [teacherResponse, setTeacherResponse] = useState("");
 
   const [status, setStatus] = useState("🟢 Ready");
 
-  // 🤖 NEW: Avatar state
-  const [avatarState, setAvatarState] = useState<AvatarState>("idle");
+  const [avatarState, setAvatarState] =
+    useState<AvatarState>("idle");
 
   // ======================================================
   // AUTH
@@ -60,7 +58,7 @@ function App() {
   };
 
   // ======================================================
-  // AUDIO HANDLER (IMPROVED FLOW)
+  // AUDIO HANDLER (AVATAR INTELLIGENCE FLOW)
   // ======================================================
   const handleRecordingComplete = async (_: string, blob: Blob) => {
     if (!selectedLanguage) {
@@ -69,7 +67,6 @@ function App() {
     }
 
     try {
-      // 🎧 USER SPEAKING DONE → LISTENING START
       setAvatarState("listening");
       setStatus("⏳ Sending audio...");
 
@@ -78,7 +75,6 @@ function App() {
       setRecognizedText(response.recognized_text);
       setTeacherResponse(response.teacher_response);
 
-      // 🗣 AI STARTS TALKING
       setAvatarState("talking");
       setStatus("🔊 Playing response");
 
@@ -90,8 +86,6 @@ function App() {
 
       audio.onended = () => {
         setStatus("🟢 Ready");
-
-        // 🟢 BACK TO IDLE
         setAvatarState("idle");
       };
     } catch (error) {
@@ -102,59 +96,52 @@ function App() {
   };
 
   // ======================================================
-  // LOGIN SCREEN
+  // 🔐 LOGIN / SIGNUP UI (UPGRADED - FIXED ISSUE)
   // ======================================================
   if (!isLoggedIn) {
     return (
-      <div style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Arial",
-        backgroundColor: "#f5f7fb",
-      }}>
-        <div style={{
-          width: "350px",
-          padding: "30px",
-          background: "white",
-          borderRadius: "12px",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-        }}>
-          <h2 style={{ textAlign: "center" }}>
-            {isSignup ? "Sign Up" : "Login"}
-          </h2>
+      <div className="auth-container">
+        <div className="auth-glow"></div>
+
+        <div className="auth-card">
+          <h1 className="auth-title">
+            Learn with MAR 🤖
+          </h1>
+
+          <p className="auth-subtitle">
+            AI Personal Teacher
+          </p>
 
           {isSignup && (
             <input
+              className="auth-input"
               placeholder="Full Name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              style={{ width: "100%", marginBottom: 10 }}
             />
           )}
 
           <input
+            className="auth-input"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={{ width: "100%", marginBottom: 10 }}
           />
 
           <input
+            className="auth-input"
             placeholder="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ width: "100%", marginBottom: 10 }}
           />
 
-          <button onClick={handleAuth} style={{ width: "100%", padding: "10px" }}>
+          <button className="auth-button" onClick={handleAuth}>
             {isSignup ? "Create Account" : "Login"}
           </button>
 
           <p
-            style={{ textAlign: "center", cursor: "pointer" }}
+            className="auth-switch"
             onClick={() => {
               setIsSignup(!isSignup);
               setFullName("");
@@ -174,21 +161,25 @@ function App() {
   // MAIN APP
   // ======================================================
   return (
-    <div style={{
-      minHeight: "100vh",
-      backgroundColor: "#f5f7fb",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      fontFamily: "Arial, sans-serif",
-    }}>
-      <div style={{
-        width: "700px",
-        background: "white",
-        borderRadius: "16px",
-        padding: "40px",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-      }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f5f7fb",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <div
+        style={{
+          width: "700px",
+          background: "white",
+          borderRadius: "16px",
+          padding: "40px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+        }}
+      >
         <h1 style={{ textAlign: "center", color: "#2563eb" }}>
           Learn with MAR
         </h1>
@@ -197,8 +188,14 @@ function App() {
           Personalized AI Learning
         </p>
 
-        {/* 🤖 AVATAR CONTROLLED BY STATE */}
-        <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
+        {/* 🤖 AVATAR */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "20px 0",
+          }}
+        >
           <Avatar state={avatarState} />
         </div>
 
@@ -215,7 +212,9 @@ function App() {
                 : "आइए हिन्दी सीखें!"}
             </h2>
 
-            <Microphone onRecordingComplete={handleRecordingComplete} />
+            <Microphone
+              onRecordingComplete={handleRecordingComplete}
+            />
           </>
         )}
 
