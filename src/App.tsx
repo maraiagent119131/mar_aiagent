@@ -1,24 +1,21 @@
 import { useState } from "react";
+import { loginUser, signupUser } from "./api/auth";
 import { sendAudio } from "./api/teacherApi";
+import { setToken } from "./auth/token";
 import LanguageSelector from "./components/LanguageSelector/LanguageSelector";
 import Microphone from "./components/Microphone/Microphone";
 
 type Language = "en" | "hi";
 
 function App() {
-  // ======================================================
-  // 🔐 AUTH STATE
-  // ======================================================
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [isSignup, setIsSignup] = useState(false);
 
-  // ======================================================
-  // EXISTING STATE
-  // ======================================================
   const [selectedLanguage, setSelectedLanguage] =
     useState<Language | null>(null);
 
@@ -28,26 +25,35 @@ function App() {
 
   const [status, setStatus] = useState("🟢 Ready");
 
-  // ======================================================
-  // 🔐 SIMPLE AUTH (TEMP FRONTEND ONLY)
-  // ======================================================
-  const handleAuth = () => {
-    if (!email || !password) {
-      alert("Please enter email and password");
+  const handleAuth = async () => {
+    if (!email || !password || (isSignup && !fullName)) {
+      alert("Please enter all required fields");
       return;
     }
 
-    localStorage.setItem("token", "demo-token");
-    setIsLoggedIn(true);
+    try {
+      if (isSignup) {
+        await signupUser(fullName, email, password);
+        alert("Account created. Please sign in.");
+        setIsSignup(false);
+        setFullName("");
+        setPassword("");
+        return;
+      }
+
+      const data = await loginUser(email, password);
+      setToken(data.access_token);
+      setIsLoggedIn(true);
+    } catch (error) {
+      console.error(error);
+      alert(isSignup ? "Signup failed" : "Invalid email or password");
+    }
   };
 
-  // ======================================================
-  // AUDIO HANDLER
-  // ======================================================
   const handleRecordingComplete = async (
-  _: string,
-  blob: Blob
-) => {
+    _: string,
+    blob: Blob
+  ) => {
     if (!selectedLanguage) {
       alert("Please select a language first.");
       return;
@@ -78,9 +84,6 @@ function App() {
     }
   };
 
-  // ======================================================
-  // 🔐 LOGIN / SIGNUP SCREEN
-  // ======================================================
   if (!isLoggedIn) {
     return (
       <div
@@ -106,6 +109,15 @@ function App() {
             {isSignup ? "Sign Up" : "Login"}
           </h2>
 
+          {isSignup && (
+            <input
+              placeholder="Full Name"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              style={{ width: "100%", marginBottom: 10 }}
+            />
+          )}
+
           <input
             placeholder="Email"
             value={email}
@@ -130,7 +142,11 @@ function App() {
 
           <p
             style={{ textAlign: "center", cursor: "pointer" }}
-            onClick={() => setIsSignup(!isSignup)}
+            onClick={() => {
+              setIsSignup(!isSignup);
+              setFullName("");
+              setPassword("");
+            }}
           >
             {isSignup
               ? "Already have account? Login"
@@ -141,9 +157,6 @@ function App() {
     );
   }
 
-  // ======================================================
-  // 🎓 AI TEACHER UI
-  // ======================================================
   return (
     <div
       style={{
