@@ -1,36 +1,18 @@
-import axios from "axios";
+import api from "./client";
 
-const api = axios.create({
-  baseURL: "http://127.0.0.1:8000",
-});
-
-export type Language = "en" | "hi";
-
-export interface AudioChatResponse {
-  recognized_text: string;
-  detected_language: string;
-  teacher_response: string;
-  audio_url: string;
-}
-
-export async function sendAudio(
-  audioBlob: Blob,
-  language: Language
-): Promise<AudioChatResponse> {
+export const sendAudio = async (
+  blob: Blob,
+  language: string
+) => {
   const formData = new FormData();
 
-  formData.append("file", audioBlob, "speech.webm");
+  formData.append("file", blob);
   formData.append("language", language);
 
-  const response = await api.post<AudioChatResponse>(
+  const response = await api.post(
     "/teacher/audio-chat",
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
+    formData
   );
 
   return response.data;
-}
+};
