@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { signupUser } from "../api/auth";
 
 export default function Signup() {
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -10,7 +11,7 @@ export default function Signup() {
 
   const handleSignup = async () => {
     try {
-      await signupUser(email, password);
+      await signupUser(fullName, email, password);
 
       alert("Account created");
 
@@ -23,6 +24,11 @@ export default function Signup() {
   return (
     <div>
       <h2>Sign Up</h2>
+
+      <input
+        placeholder="Full Name"
+        onChange={(e) => setFullName(e.target.value)}
+      />
 
       <input
         placeholder="Email"
