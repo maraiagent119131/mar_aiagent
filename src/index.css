@@ -1,5 +1,5 @@
 /* ======================================================
-   🌐 GLOBAL RESET + UNIFIED BACKGROUND SYSTEM
+   🌐 GLOBAL RESET + UNIFIED BACKGROUND SYSTEM (UPGRADED)
 ====================================================== */
 
 body {
@@ -7,13 +7,13 @@ body {
   font-family: "Arial Rounded MT Bold", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 
-  /* 🌈 UNIFIED EDTECH BACKGROUND (ALL SCREENS) */
-  background: radial-gradient(
-    circle at top,
-    #eef2ff 0%,
-    #f5f7fb 50%,
-    #eef2ff 100%
-  );
+  /* 🌈 UPGRADED KID-FRIENDLY EDUCATIONAL BACKGROUND */
+  background:
+    radial-gradient(circle at 15% 15%, #c7d2fe 0%, transparent 45%),
+    radial-gradient(circle at 85% 20%, #fde68a 0%, transparent 40%),
+    radial-gradient(circle at 30% 85%, #bbf7d0 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, #fecaca 0%, transparent 40%),
+    linear-gradient(180deg, #f8fafc, #eef2ff);
 
   min-height: 100vh;
 }
@@ -32,7 +32,6 @@ body {
   justify-content: center;
   align-items: center;
 
-  /* IMPORTANT: NO DIFFERENT BACKGROUND */
   background: transparent;
 }
 
@@ -96,53 +95,58 @@ body {
   justify-content: center;
   align-items: center;
 
-  /* SAME BACKGROUND AS APP (IMPORTANT FIX) */
   background: transparent;
   position: relative;
 }
 
-/* floating blobs (soft, educational feel) */
+/* floating educational blobs (SOFTER + MORE FUN) */
 .kid-float {
   position: absolute;
-  width: 220px;
-  height: 220px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
-  filter: blur(70px);
+  filter: blur(80px);
   opacity: 0.35;
-  animation: float 8s infinite ease-in-out;
+  animation: float 10s infinite ease-in-out;
 }
 
 .kid1 {
-  background: #a5b4fc;
+  background: #818cf8;
   top: 10%;
   left: 10%;
 }
 
 .kid2 {
-  background: #fcd34d;
+  background: #fbbf24;
   bottom: 10%;
   right: 10%;
 }
 
 .kid3 {
   background: #34d399;
-  top: 50%;
-  left: 60%;
+  top: 55%;
+  left: 55%;
+}
+
+.kid4 {
+  background: #fb7185;
+  top: 30%;
+  right: 25%;
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
+  50% { transform: translateY(-25px); }
 }
 
 /* ======================================================
-   🧠 LOGIN CARD (DUOLINGO STYLE)
+   🧠 LOGIN CARD (DUOLINGO LEVEL POLISH)
 ====================================================== */
 
 .kid-card {
   width: 380px;
-  padding: 32px;
-  border-radius: 24px;
+  padding: 34px;
+  border-radius: 26px;
 
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(16px);
@@ -150,19 +154,19 @@ body {
   text-align: center;
   z-index: 2;
 
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.10);
 
   border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .kid-robot {
-  font-size: 52px;
-  animation: bounce 2.5s infinite;
+  font-size: 54px;
+  animation: bounce 2.8s infinite;
 }
 
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-10px); }
 }
 
 .kid-title {
@@ -178,7 +182,7 @@ body {
 }
 
 /* ======================================================
-   ✍️ INPUTS (MODERN KID FRIENDLY)
+   ✍️ INPUTS (CLEAN EDUCATIONAL STYLE)
 ====================================================== */
 
 .kid-input {
@@ -241,7 +245,7 @@ body {
 }
 
 /* ======================================================
-   🤖 AVATAR SYSTEM
+   🤖 AVATAR SYSTEM (UNCHANGED)
 ====================================================== */
 
 .avatar {
@@ -257,18 +261,15 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.10);
 }
 
-/* idle */
 .avatar.idle video {
   filter: brightness(1);
 }
 
-/* listening */
 .avatar.listening video {
   filter: brightness(1.2) saturate(1.2);
   transform: scale(1.05);
 }
 
-/* talking */
 .avatar.talking video {
   filter: brightness(1.3) saturate(1.4);
   transform: scale(1.08);
