@@ -34,14 +34,14 @@ function App() {
   // ======================================================
   const handleAuth = async () => {
     if (!email || !password || (isSignup && !fullName)) {
-      alert("Please enter all required fields");
+      alert("Please fill all required fields");
       return;
     }
 
     try {
       if (isSignup) {
         await signupUser(fullName, email, password);
-        alert("Account created. Please sign in.");
+        alert("Account created! Please login.");
         setIsSignup(false);
         setFullName("");
         setPassword("");
@@ -51,24 +51,24 @@ function App() {
       const data = await loginUser(email, password);
       setToken(data.access_token);
       setIsLoggedIn(true);
-    } catch (error) {
-      console.error(error);
-      alert(isSignup ? "Signup failed" : "Invalid email or password");
+    } catch (err) {
+      console.error(err);
+      alert(isSignup ? "Signup failed" : "Invalid credentials");
     }
   };
 
   // ======================================================
-  // AUDIO HANDLER (AVATAR INTELLIGENCE FLOW)
+  // AUDIO FLOW (AVATAR INTELLIGENCE ENGINE)
   // ======================================================
   const handleRecordingComplete = async (_: string, blob: Blob) => {
     if (!selectedLanguage) {
-      alert("Please select a language first.");
+      alert("Select language first");
       return;
     }
 
     try {
       setAvatarState("listening");
-      setStatus("⏳ Sending audio...");
+      setStatus("🎧 Listening...");
 
       const response = await sendAudio(blob, selectedLanguage);
 
@@ -76,7 +76,7 @@ function App() {
       setTeacherResponse(response.teacher_response);
 
       setAvatarState("talking");
-      setStatus("🔊 Playing response");
+      setStatus("🗣 Speaking...");
 
       const audio = new Audio(
         `http://127.0.0.1:8000${response.audio_url}`
@@ -85,18 +85,18 @@ function App() {
       audio.play();
 
       audio.onended = () => {
-        setStatus("🟢 Ready");
         setAvatarState("idle");
+        setStatus("🟢 Ready");
       };
     } catch (error) {
       console.error(error);
-      setStatus("❌ Error");
       setAvatarState("idle");
+      setStatus("❌ Error");
     }
   };
 
   // ======================================================
-  // 🔐 LOGIN / SIGNUP (CLEAN + KID FRIENDLY UI HOOK)
+  // 🔐 AUTH SCREEN (KID EDUCATIONAL DESIGN)
   // ======================================================
   if (!isLoggedIn) {
     return (
@@ -110,13 +110,13 @@ function App() {
 
           <h1 className="kid-title">Learn with MAR</h1>
           <p className="kid-subtitle">
-            Your Friendly AI Teacher
+            Your AI Learning Teacher
           </p>
 
           {isSignup && (
             <input
               className="kid-input"
-              placeholder="👦 Your Name"
+              placeholder="Your Name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
@@ -124,21 +124,21 @@ function App() {
 
           <input
             className="kid-input"
-            placeholder="📧 Email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
           <input
             className="kid-input"
-            placeholder="🔒 Password"
+            placeholder="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
           <button className="kid-button" onClick={handleAuth}>
-            {isSignup ? "🚀 Create Account" : "🎓 Start Learning"}
+            {isSignup ? "Create Account" : "Start Learning"}
           </button>
 
           <p
@@ -155,7 +155,7 @@ function App() {
           </p>
 
           <p className="kid-footer">
-            🧠 Learn English with fun AI conversations
+            Learn English with AI conversations
           </p>
         </div>
       </div>
@@ -163,53 +163,64 @@ function App() {
   }
 
   // ======================================================
-  // MAIN APP
+  // MAIN APP (EDUCATION DASHBOARD)
   // ======================================================
   return (
-    <div className="app-container">
-      <div className="app-card">
-        <h1 className="app-title">Learn with MAR</h1>
+    <div className="edu-bg">
+      <div className="edu-container">
 
-        <p className="app-subtitle">
-          Personalized AI Learning
-        </p>
+        {/* HEADER */}
+        <div className="edu-header">
+          <h1>Learn with MAR</h1>
+          <p>Personalized AI Learning Assistant</p>
+        </div>
 
-        {/* 🤖 AVATAR */}
-        <div className="avatar-wrapper">
+        {/* AVATAR */}
+        <div className="edu-avatar">
           <Avatar state={avatarState} />
         </div>
 
+        {/* LANGUAGE */}
         {!selectedLanguage ? (
-          <LanguageSelector
-            selectedLanguage={selectedLanguage}
-            onLanguageSelect={setSelectedLanguage}
-          />
+          <div className="edu-card">
+            <h2>Choose Language</h2>
+            <LanguageSelector
+              selectedLanguage={selectedLanguage}
+              onLanguageSelect={setSelectedLanguage}
+            />
+          </div>
         ) : (
-          <>
-            <h2 className="app-heading">
+          <div className="edu-card">
+            <h2>
               {selectedLanguage === "en"
-                ? "Let's learn English together!"
-                : "आइए हिन्दी सीखें!"}
+                ? "English Session"
+                : "Hindi Session"}
             </h2>
 
             <Microphone
               onRecordingComplete={handleRecordingComplete}
             />
-          </>
+          </div>
         )}
 
-        <hr />
+        {/* CONVERSATION */}
+        <div className="edu-chat">
+          <h3>Conversation</h3>
 
-        <div className="chat-box">
-          <p><b>👧 You:</b> {recognizedText || "-"}</p>
-          <p><b>🤖 MAR:</b> {teacherResponse || "-"}</p>
+          <div className="edu-msg">
+            <b>You:</b> {recognizedText || "-"}
+          </div>
+
+          <div className="edu-msg">
+            <b>MAR:</b> {teacherResponse || "-"}
+          </div>
         </div>
 
-        <hr />
+        {/* STATUS */}
+        <div className="edu-status">
+          Status: {status}
+        </div>
 
-        <p className="status">
-          <b>Status:</b> {status}
-        </p>
       </div>
     </div>
   );
