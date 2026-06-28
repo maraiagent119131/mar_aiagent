@@ -46,9 +46,9 @@ function App() {
   // AUDIO HANDLER
   // ======================================================
   const handleRecordingComplete = async (
-    blobUrl: string,
-    blob: Blob
-  ) => {
+  _: string,
+  blob: Blob
+) => {
     if (!selectedLanguage) {
       alert("Please select a language first.");
       return;
