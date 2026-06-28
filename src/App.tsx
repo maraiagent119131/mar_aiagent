@@ -96,52 +96,53 @@ function App() {
   };
 
   // ======================================================
-  // 🔐 LOGIN / SIGNUP UI (UPGRADED - FIXED ISSUE)
+  // 🔐 LOGIN / SIGNUP (CLEAN + KID FRIENDLY UI HOOK)
   // ======================================================
   if (!isLoggedIn) {
     return (
-      <div className="auth-container">
-        <div className="auth-glow"></div>
+      <div className="kid-bg">
+        <div className="kid-float kid1"></div>
+        <div className="kid-float kid2"></div>
+        <div className="kid-float kid3"></div>
 
-        <div className="auth-card">
-          <h1 className="auth-title">
-            Learn with MAR 🤖
-          </h1>
+        <div className="kid-card">
+          <div className="kid-robot">🤖</div>
 
-          <p className="auth-subtitle">
-            AI Personal Teacher
+          <h1 className="kid-title">Learn with MAR</h1>
+          <p className="kid-subtitle">
+            Your Friendly AI Teacher
           </p>
 
           {isSignup && (
             <input
-              className="auth-input"
-              placeholder="Full Name"
+              className="kid-input"
+              placeholder="👦 Your Name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
           )}
 
           <input
-            className="auth-input"
-            placeholder="Email"
+            className="kid-input"
+            placeholder="📧 Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
           <input
-            className="auth-input"
-            placeholder="Password"
+            className="kid-input"
+            placeholder="🔒 Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button className="auth-button" onClick={handleAuth}>
-            {isSignup ? "Create Account" : "Login"}
+          <button className="kid-button" onClick={handleAuth}>
+            {isSignup ? "🚀 Create Account" : "🎓 Start Learning"}
           </button>
 
           <p
-            className="auth-switch"
+            className="kid-link"
             onClick={() => {
               setIsSignup(!isSignup);
               setFullName("");
@@ -150,7 +151,11 @@ function App() {
           >
             {isSignup
               ? "Already have account? Login"
-              : "Create new account"}
+              : "New here? Create account"}
+          </p>
+
+          <p className="kid-footer">
+            🧠 Learn English with fun AI conversations
           </p>
         </div>
       </div>
@@ -161,41 +166,16 @@ function App() {
   // MAIN APP
   // ======================================================
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f5f7fb",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          width: "700px",
-          background: "white",
-          borderRadius: "16px",
-          padding: "40px",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-        }}
-      >
-        <h1 style={{ textAlign: "center", color: "#2563eb" }}>
-          Learn with MAR
-        </h1>
+    <div className="app-container">
+      <div className="app-card">
+        <h1 className="app-title">Learn with MAR</h1>
 
-        <p style={{ textAlign: "center", color: "#666" }}>
+        <p className="app-subtitle">
           Personalized AI Learning
         </p>
 
         {/* 🤖 AVATAR */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            margin: "20px 0",
-          }}
-        >
+        <div className="avatar-wrapper">
           <Avatar state={avatarState} />
         </div>
 
@@ -206,7 +186,7 @@ function App() {
           />
         ) : (
           <>
-            <h2 style={{ textAlign: "center" }}>
+            <h2 className="app-heading">
               {selectedLanguage === "en"
                 ? "Let's learn English together!"
                 : "आइए हिन्दी सीखें!"}
@@ -218,22 +198,17 @@ function App() {
           </>
         )}
 
-        <hr style={{ margin: "30px 0" }} />
+        <hr />
 
-        <h3>Conversation</h3>
+        <div className="chat-box">
+          <p><b>👧 You:</b> {recognizedText || "-"}</p>
+          <p><b>🤖 MAR:</b> {teacherResponse || "-"}</p>
+        </div>
 
-        <p>
-          <strong>👧 You:</strong> {recognizedText || "-"}
-        </p>
+        <hr />
 
-        <p>
-          <strong>🤖 MAR:</strong> {teacherResponse || "-"}
-        </p>
-
-        <hr style={{ margin: "30px 0" }} />
-
-        <p>
-          <strong>Status:</strong> {status}
+        <p className="status">
+          <b>Status:</b> {status}
         </p>
       </div>
     </div>
