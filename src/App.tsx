@@ -24,21 +24,24 @@ function App() {
   const [recognizedText, setRecognizedText] = useState("");
   const [teacherResponse, setTeacherResponse] = useState("");
 
-  const [status, setStatus] = useState("Ready");
+  const [status, setStatus] = useState("🟢 Ready");
 
   const [avatarState, setAvatarState] =
     useState<AvatarState>("idle");
 
+  // ======================================================
   // AUTH
+  // ======================================================
   const handleAuth = async () => {
     if (!email || !password || (isSignup && !fullName)) {
-      alert("Please fill all fields");
+      alert("Please fill all required fields");
       return;
     }
 
     try {
       if (isSignup) {
         await signupUser(fullName, email, password);
+        alert("Account created! Please login.");
         setIsSignup(false);
         setFullName("");
         setPassword("");
@@ -50,16 +53,22 @@ function App() {
       setIsLoggedIn(true);
     } catch (err) {
       console.error(err);
+      alert(isSignup ? "Signup failed" : "Invalid credentials");
     }
   };
 
-  // AUDIO FLOW
+  // ======================================================
+  // AUDIO FLOW (AVATAR INTELLIGENCE ENGINE)
+  // ======================================================
   const handleRecordingComplete = async (_: string, blob: Blob) => {
-    if (!selectedLanguage) return;
+    if (!selectedLanguage) {
+      alert("Select language first");
+      return;
+    }
 
     try {
       setAvatarState("listening");
-      setStatus("Listening...");
+      setStatus("🎧 Listening...");
 
       const response = await sendAudio(blob, selectedLanguage);
 
@@ -67,7 +76,7 @@ function App() {
       setTeacherResponse(response.teacher_response);
 
       setAvatarState("talking");
-      setStatus("Speaking...");
+      setStatus("🗣 Speaking...");
 
       const audio = new Audio(
         `http://127.0.0.1:8000${response.audio_url}`
@@ -77,32 +86,36 @@ function App() {
 
       audio.onended = () => {
         setAvatarState("idle");
-        setStatus("Ready");
+        setStatus("🟢 Ready");
       };
-    } catch (e) {
+    } catch (error) {
+      console.error(error);
       setAvatarState("idle");
-      setStatus("Error");
+      setStatus("❌ Error");
     }
   };
 
   // ======================================================
-  // 🔐 AUTH UI (CENTERED + MODERN CARD)
+  // 🔐 AUTH SCREEN (KID EDUCATIONAL DESIGN)
   // ======================================================
   if (!isLoggedIn) {
     return (
-      <div className="auth-bg">
-        <div className="auth-card">
+      <div className="kid-bg">
+        <div className="kid-float kid1"></div>
+        <div className="kid-float kid2"></div>
+        <div className="kid-float kid3"></div>
 
-          <div className="auth-robot">🤖</div>
+        <div className="kid-card">
+          <div className="kid-robot">🤖</div>
 
-          <h1 className="auth-title">Learn with MAR</h1>
-          <p className="auth-subtitle">
-            Your Personal AI English Teacher
+          <h1 className="kid-title">Learn with MAR</h1>
+          <p className="kid-subtitle">
+            Your AI Learning Teacher
           </p>
 
           {isSignup && (
             <input
-              className="auth-input"
+              className="kid-input"
               placeholder="Your Name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -110,31 +123,39 @@ function App() {
           )}
 
           <input
-            className="auth-input"
+            className="kid-input"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
           <input
-            className="auth-input"
+            className="kid-input"
             placeholder="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
 
-          <button className="auth-button" onClick={handleAuth}>
+          <button className="kid-button" onClick={handleAuth}>
             {isSignup ? "Create Account" : "Start Learning"}
           </button>
 
           <p
-            className="auth-switch"
-            onClick={() => setIsSignup(!isSignup)}
+            className="kid-link"
+            onClick={() => {
+              setIsSignup(!isSignup);
+              setFullName("");
+              setPassword("");
+            }}
           >
             {isSignup
               ? "Already have account? Login"
               : "New here? Create account"}
+          </p>
+
+          <p className="kid-footer">
+            Learn English with AI conversations
           </p>
         </div>
       </div>
@@ -142,30 +163,27 @@ function App() {
   }
 
   // ======================================================
-  // 🎓 MAIN APP UI (EDTECH DASHBOARD)
+  // MAIN APP (EDUCATION DASHBOARD)
   // ======================================================
   return (
     <div className="edu-bg">
-
       <div className="edu-container">
 
         {/* HEADER */}
         <div className="edu-header">
           <h1>Learn with MAR</h1>
-          <p>AI Learning Companion for Kids</p>
+          <p>Personalized AI Learning Assistant</p>
         </div>
 
         {/* AVATAR */}
-        <div className={`edu-avatar ${avatarState}`}>
+        <div className="edu-avatar">
           <Avatar state={avatarState} />
         </div>
 
-        {/* LANGUAGE CARD */}
+        {/* LANGUAGE */}
         {!selectedLanguage ? (
           <div className="edu-card">
-            <h2>Choose Your Language</h2>
-            <p>Start your learning journey</p>
-
+            <h2>Choose Language</h2>
             <LanguageSelector
               selectedLanguage={selectedLanguage}
               onLanguageSelect={setSelectedLanguage}
@@ -175,8 +193,8 @@ function App() {
           <div className="edu-card">
             <h2>
               {selectedLanguage === "en"
-                ? "English Learning Mode"
-                : "Hindi Learning Mode"}
+                ? "English Session"
+                : "Hindi Session"}
             </h2>
 
             <Microphone
@@ -185,20 +203,22 @@ function App() {
           </div>
         )}
 
-        {/* CHAT */}
+        {/* CONVERSATION */}
         <div className="edu-chat">
+          <h3>Conversation</h3>
+
           <div className="edu-msg">
-            <span>You:</span> {recognizedText || "Speak something..."}
+            <b>You:</b> {recognizedText || "-"}
           </div>
 
           <div className="edu-msg">
-            <span>MAR:</span> {teacherResponse || "Waiting..."}
+            <b>MAR:</b> {teacherResponse || "-"}
           </div>
         </div>
 
         {/* STATUS */}
         <div className="edu-status">
-          {status}
+          Status: {status}
         </div>
 
       </div>
