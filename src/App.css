@@ -182,8 +182,9 @@
     border-right-color: var(--border);
   }
 }
+
 /* ======================================================
-   🤖 AI AVATAR - "ALIVE FEELING SYSTEM"
+   🤖 AI AVATAR - REALISTIC ALIVE SYSTEM (UPGRADED)
 ====================================================== */
 
 .avatar {
@@ -191,96 +192,96 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  transition: all 0.4s ease;
 }
 
 /* ======================================================
-   🟢 IDLE STATE (breathing robot)
+   🟢 IDLE (natural breathing - softer)
 ====================================================== */
 .avatar.idle video {
   transform: scale(1);
-  filter: brightness(1);
-  animation: breathe 3.5s ease-in-out infinite;
+  filter: brightness(0.98) saturate(1.05);
+  animation: breatheSoft 4.5s ease-in-out infinite;
 }
 
-/* soft glow ring */
 .avatar.idle::after {
   content: "";
   position: absolute;
-  width: 280px;
-  height: 280px;
+  width: 290px;
+  height: 290px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(0,150,255,0.15), transparent 70%);
-  animation: glow 4s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(0,150,255,0.10), transparent 70%);
+  animation: glowSoft 5s ease-in-out infinite;
 }
 
 /* ======================================================
-   🎧 LISTENING STATE (focused attention)
+   🎧 LISTENING (focus + attention tracking feel)
 ====================================================== */
 .avatar.listening video {
-  transform: scale(1.05);
-  filter: brightness(1.2) contrast(1.1);
-  animation: listeningPulse 1.2s ease-in-out infinite;
+  transform: scale(1.04);
+  filter: brightness(1.1) contrast(1.05);
+  animation: listenFloat 1.8s ease-in-out infinite;
 }
 
 .avatar.listening::after {
   content: "";
   position: absolute;
-  width: 300px;
-  height: 300px;
+  width: 310px;
+  height: 310px;
   border-radius: 50%;
-  border: 2px solid rgba(0, 200, 255, 0.4);
-  animation: listeningRing 1.5s linear infinite;
+  border: 2px solid rgba(0, 200, 255, 0.25);
+  animation: listeningWave 2.2s ease-out infinite;
 }
 
 /* ======================================================
-   🗣️ TALKING STATE (active speaking AI)
+   🗣️ TALKING (natural speech energy, not too fast)
 ====================================================== */
 .avatar.talking video {
-  transform: scale(1.08);
-  filter: saturate(1.4) brightness(1.15);
-  animation: talkBounce 0.5s ease-in-out infinite;
+  transform: scale(1.06);
+  filter: saturate(1.2) brightness(1.08);
+  animation: talkNatural 0.9s ease-in-out infinite;
 }
 
 .avatar.talking::after {
   content: "";
   position: absolute;
-  width: 260px;
-  height: 260px;
+  width: 270px;
+  height: 270px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,100,100,0.2), transparent 70%);
-  animation: talkGlow 0.6s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(255,120,120,0.15), transparent 70%);
+  animation: talkGlowSoft 1.2s ease-in-out infinite;
 }
 
 /* ======================================================
-   ✨ ANIMATIONS
+   ✨ SMOOTHER ANIMATIONS (IMPORTANT FIX)
 ====================================================== */
 
-@keyframes breathe {
+@keyframes breatheSoft {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  50% { transform: scale(1.015); }
 }
 
-@keyframes glow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.1); }
+@keyframes glowSoft {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.06); }
 }
 
-@keyframes listeningPulse {
-  0%, 100% { transform: scale(1.05); }
-  50% { transform: scale(1.08); }
+@keyframes listenFloat {
+  0%, 100% { transform: scale(1.04) translateY(0px); }
+  50% { transform: scale(1.05) translateY(-2px); }
 }
 
-@keyframes listeningRing {
-  0% { transform: scale(1); opacity: 0.8; }
-  100% { transform: scale(1.4); opacity: 0; }
+@keyframes listeningWave {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.25); opacity: 0; }
 }
 
-@keyframes talkBounce {
-  0%, 100% { transform: scale(1.08); }
-  50% { transform: scale(1.12); }
+@keyframes talkNatural {
+  0%, 100% { transform: scale(1.06); }
+  50% { transform: scale(1.085); }
 }
 
-@keyframes talkGlow {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+@keyframes talkGlowSoft {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
 }
