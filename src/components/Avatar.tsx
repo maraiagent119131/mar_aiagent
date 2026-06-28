@@ -1,18 +1,14 @@
-import { useState } from "react";
-
 export default function Avatar() {
-  const [state, setState] = useState("idle");
-
   return (
-    <div style={{ textAlign: "center", margin: "20px 0" }}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <video
-        src="http://127.0.0.1:8000/avatars/robot.mp4"
+        src="/avatars/robot.mp4"
         autoPlay
         loop
         muted
         playsInline
         style={{
-          width: "250px",
+          width: "260px",
           borderRadius: "16px",
         }}
       />
