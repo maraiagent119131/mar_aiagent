@@ -8,6 +8,8 @@ import Avatar from "./components/Avatar";
 
 type Language = "en" | "hi";
 
+type AvatarState = "idle" | "listening" | "talking";
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -25,6 +27,9 @@ function App() {
   const [teacherResponse, setTeacherResponse] = useState("");
 
   const [status, setStatus] = useState("🟢 Ready");
+
+  // 🤖 NEW: Avatar state
+  const [avatarState, setAvatarState] = useState<AvatarState>("idle");
 
   // ======================================================
   // AUTH
@@ -55,25 +60,26 @@ function App() {
   };
 
   // ======================================================
-  // AUDIO HANDLER
+  // AUDIO HANDLER (IMPROVED FLOW)
   // ======================================================
-  const handleRecordingComplete = async (
-    _: string,
-    blob: Blob
-  ) => {
+  const handleRecordingComplete = async (_: string, blob: Blob) => {
     if (!selectedLanguage) {
       alert("Please select a language first.");
       return;
     }
 
-    setStatus("⏳ Sending audio...");
-
     try {
+      // 🎧 USER SPEAKING DONE → LISTENING START
+      setAvatarState("listening");
+      setStatus("⏳ Sending audio...");
+
       const response = await sendAudio(blob, selectedLanguage);
 
       setRecognizedText(response.recognized_text);
       setTeacherResponse(response.teacher_response);
 
+      // 🗣 AI STARTS TALKING
+      setAvatarState("talking");
       setStatus("🔊 Playing response");
 
       const audio = new Audio(
@@ -84,10 +90,14 @@ function App() {
 
       audio.onended = () => {
         setStatus("🟢 Ready");
+
+        // 🟢 BACK TO IDLE
+        setAvatarState("idle");
       };
     } catch (error) {
       console.error(error);
       setStatus("❌ Error");
+      setAvatarState("idle");
     }
   };
 
@@ -139,10 +149,7 @@ function App() {
             style={{ width: "100%", marginBottom: 10 }}
           />
 
-          <button
-            onClick={handleAuth}
-            style={{ width: "100%", padding: "10px" }}
-          >
+          <button onClick={handleAuth} style={{ width: "100%", padding: "10px" }}>
             {isSignup ? "Create Account" : "Login"}
           </button>
 
@@ -190,11 +197,9 @@ function App() {
           Personalized AI Learning
         </p>
 
-        {/* ======================================================
-            🤖 AVATAR ADDED HERE (IMPORTANT FIX)
-        ====================================================== */}
+        {/* 🤖 AVATAR CONTROLLED BY STATE */}
         <div style={{ display: "flex", justifyContent: "center", margin: "20px 0" }}>
-          <Avatar />
+          <Avatar state={avatarState} />
         </div>
 
         {!selectedLanguage ? (
