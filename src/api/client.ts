@@ -1,12 +1,12 @@
 import axios from "axios";
 import { getToken, removeToken } from "../auth/token";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// 🔥 HARD-CODED BACKEND (FORCE OVERRIDE)
+const BASE_URL = "http://127.0.0.1:8000";
 
 const api = axios.create({
   baseURL: BASE_URL,
 });
-
 
 // ======================================================
 // ATTACH JWT TO EVERY REQUEST
@@ -21,9 +21,8 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-
 // ======================================================
-// HANDLE TOKEN EXPIRY / AUTH ERROR
+// HANDLE AUTH ERROR
 // ======================================================
 api.interceptors.response.use(
   (response) => response,
