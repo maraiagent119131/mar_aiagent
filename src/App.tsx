@@ -8,7 +8,7 @@ type Language = "en" | "hi";
 
 function App() {
   // ======================================================
-  // 🔐 AUTH STATE (NEW)
+  // 🔐 AUTH STATE
   // ======================================================
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -18,22 +18,16 @@ function App() {
   const [isSignup, setIsSignup] = useState(false);
 
   // ======================================================
-  // EXISTING STATE (UNCHANGED)
+  // EXISTING STATE
   // ======================================================
   const [selectedLanguage, setSelectedLanguage] =
     useState<Language | null>(null);
 
-  const [recordingUrl, setRecordingUrl] =
-    useState<string | null>(null);
+  const [recognizedText, setRecognizedText] = useState("");
 
-  const [recognizedText, setRecognizedText] =
-    useState("");
+  const [teacherResponse, setTeacherResponse] = useState("");
 
-  const [teacherResponse, setTeacherResponse] =
-    useState("");
-
-  const [status, setStatus] =
-    useState("🟢 Ready");
+  const [status, setStatus] = useState("🟢 Ready");
 
   // ======================================================
   // 🔐 SIMPLE AUTH (TEMP FRONTEND ONLY)
@@ -44,14 +38,12 @@ function App() {
       return;
     }
 
-    // TEMP LOGIN (later connect to backend /auth)
     localStorage.setItem("token", "demo-token");
-
     setIsLoggedIn(true);
   };
 
   // ======================================================
-  // AUDIO HANDLER (UNCHANGED)
+  // AUDIO HANDLER
   // ======================================================
   const handleRecordingComplete = async (
     blobUrl: string,
@@ -62,14 +54,10 @@ function App() {
       return;
     }
 
-    setRecordingUrl(blobUrl);
     setStatus("⏳ Sending audio...");
 
     try {
-      const response = await sendAudio(
-        blob,
-        selectedLanguage
-      );
+      const response = await sendAudio(blob, selectedLanguage);
 
       setRecognizedText(response.recognized_text);
       setTeacherResponse(response.teacher_response);
@@ -92,7 +80,7 @@ function App() {
   };
 
   // ======================================================
-  // 🔐 LOGIN / SIGNUP SCREEN (NEW ENTRY POINT)
+  // 🔐 LOGIN / SIGNUP SCREEN
   // ======================================================
   if (!isLoggedIn) {
     return (
@@ -155,7 +143,7 @@ function App() {
   }
 
   // ======================================================
-  // 🎓 YOUR EXISTING AI TEACHER UI (UNCHANGED)
+  // 🎓 AI TEACHER UI
   // ======================================================
   return (
     <div
